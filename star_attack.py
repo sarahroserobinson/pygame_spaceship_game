@@ -9,7 +9,7 @@ class StarAttack():
 
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-        self.bg_colour = (0, 0, 0)
+        self.bg_colour = (100, 100, 100)
         self.ship = Ship(self)
 
         pygame.display.set_caption("Star Attack")
@@ -21,9 +21,10 @@ class StarAttack():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
-        self.screen.fill(self.bg_colour)
-        pygame.display.flip()
-        self.clock.tick(60)
+            self.screen.fill(self.bg_colour)
+            self.ship.blitme()
+            pygame.display.flip()
+            self.clock.tick(60)
 
 if __name__ == "__main__":
     space_game = StarAttack()
