@@ -1,6 +1,7 @@
 import pygame
 import sys
 from ship import Ship
+from star import Star
 
 class StarAttack():
     """A class to manage the game assets and functions."""
@@ -11,10 +12,13 @@ class StarAttack():
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.bg_colour = (100, 100, 100)
         self.ship = Ship(self)
+        
 
         pygame.display.set_caption("Star Attack")
         
         self.running = True
+
+        self._create_star()
 
     def run_game(self):
         while self.running:
@@ -22,8 +26,13 @@ class StarAttack():
             self.ship.update()
             self.screen.fill(self.bg_colour)
             self.ship.blitme()
+            self.star.blitme()
             pygame.display.flip()
             self.clock.tick(60)
+    
+    def _create_star(self):
+        self.star = Star(self)
+
 
     def _check_events(self):
         """Respond to key presses and mouse events."""
