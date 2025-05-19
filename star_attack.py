@@ -42,10 +42,13 @@ class StarAttack():
             self.ship.moving_down = False
 
     def _check_keydown_events(self, event):
+        
         if event.key == pygame.K_UP:
             self.ship.moving_up = True
         elif event.key == pygame.K_DOWN:
-            self.ship.moving_down = True       
+            self.ship.moving_down = True
+        elif event.key == pygame.K_q:
+            sys.exit()       
 
 
 if __name__ == "__main__":
