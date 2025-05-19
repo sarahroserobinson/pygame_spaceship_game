@@ -1,13 +1,16 @@
 import pygame
 import sys
+from ship import Ship
 
 class StarAttack():
-
+    """A class to manage the game assets and functions."""
     def __init__(self):
         pygame.init()
 
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.bg_colour = (0, 0, 0)
+        self.ship = Ship(self)
 
         pygame.display.set_caption("Star Attack")
         
@@ -18,6 +21,7 @@ class StarAttack():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
+        self.screen.fill(self.bg_colour)
         pygame.display.flip()
         self.clock.tick(60)
 
