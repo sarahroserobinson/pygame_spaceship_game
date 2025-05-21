@@ -2,6 +2,7 @@ import pygame
 import sys
 from ship import Ship
 from star import Star
+from random import randint
 
 class StarAttack():
     """A class to manage the game assets and functions."""
@@ -10,28 +11,46 @@ class StarAttack():
 
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen_height = self.screen.get_height()
+        self.screen_width = self.screen.get_width()
         self.bg_colour = (100, 100, 100)
         self.ship = Ship(self)
-        
+        self.stars = pygame.sprite.Group()
+        self._create_galaxy()
 
         pygame.display.set_caption("Star Attack")
         
         self.running = True
 
-        self._create_star()
 
     def run_game(self):
         while self.running:
             self._check_events()
             self.ship.update()
-            self.screen.fill(self.bg_colour)
-            self.ship.blitme()
-            self.star.blitme()
+            self._update_screen()
             pygame.display.flip()
             self.clock.tick(60)
     
-    def _create_star(self):
-        self.star = Star(self)
+    def _create_star(self, x_position, y_position):
+        new_star = Star(self)
+        new_star.x = x_position
+        new_star.rect.x = x_position
+        new_star.rect.y = y_position
+        self.stars.add(new_star)
+
+    def _create_galaxy(self):
+    # Continue adding stars to the right hand side of the screen.
+        star = Star(self)
+        star_width, star_height = star.rect.size
+
+        current_y = star_height
+        while current_y < (self.screen_height - 2 * star_height):
+            current_x = self.screen_width - 2 * star_width
+            while current_x > 15 * star_width:
+                self._create_star(current_x, current_y)
+                random_position = randint(1, 3)
+                current_x -= random_position * star_width
+            current_y += 2 * star_height
 
 
     def _check_events(self):
@@ -58,6 +77,14 @@ class StarAttack():
             self.ship.moving_down = True
         elif event.key == pygame.K_q:
             sys.exit()       
+
+    def _update_screen(self):
+        "Update images on the screen and flip to the new screen."
+        self.screen.fill(self.bg_colour)
+        self.ship.blitme()
+        self.stars.draw(self.screen)
+
+        pygame.display.flip()
 
 
 if __name__ == "__main__":
