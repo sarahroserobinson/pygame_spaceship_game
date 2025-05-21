@@ -2,6 +2,7 @@ import pygame
 import sys
 from ship import Ship
 from star import Star
+from bullet import Bullet
 from random import randint
 
 class StarAttack():
@@ -16,6 +17,7 @@ class StarAttack():
         self.bg_colour = (100, 100, 100)
         self.ship = Ship(self)
         self.stars = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
         self._create_galaxy()
 
         pygame.display.set_caption("Star Attack")
@@ -28,6 +30,7 @@ class StarAttack():
             self._check_events()
             self.ship.update()
             self._update_screen()
+            self._update_bullets()
             pygame.display.flip()
             self.clock.tick(60)
     
@@ -70,20 +73,36 @@ class StarAttack():
             self.ship.moving_down = False
 
     def _check_keydown_events(self, event):
-        
         if event.key == pygame.K_UP:
             self.ship.moving_up = True
         elif event.key == pygame.K_DOWN:
             self.ship.moving_down = True
+        elif event.key == pygame.K_SPACE:
+            self._shoot_bullet()
         elif event.key == pygame.K_q:
-            sys.exit()       
+            sys.exit() 
+
+    def _shoot_bullet(self):
+        """Create a new bullet and add it to the bullets group."""
+        bullets_allowed = 5
+        if len(self.bullets) < bullets_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
+            
+    def _update_bullets(self):
+        """Update position of bullets and delete shot bullets."""
+        self.bullets.update()
+        # Delete bullets that have been shot and gone past the screen.
+        for bullet in self.bullets.copy():
+            if bullet.rect.right <= 0:
+                self.bullets.remove(bullet)
 
     def _update_screen(self):
         "Update images on the screen and flip to the new screen."
         self.screen.fill(self.bg_colour)
         self.ship.blitme()
         self.stars.draw(self.screen)
-
+        self.bullets.draw(self.screen)
         pygame.display.flip()
 
 
